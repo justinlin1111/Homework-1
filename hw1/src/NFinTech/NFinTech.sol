@@ -143,7 +143,7 @@ contract NFinTech is IERC721 {
         _operatorApproval[owner][msg.sender],"not owner nor approved");
 
         _transfer(owner, from, to, tokenId);
-        require(_checkOnERC721Received(from, to, tokenId, data), "not ERC721Receiver");
+        require(to.code.length == 0 || IERC721TokenReceiver(to).onERC721Received(msg.sender, from, tokenId, data) == IERC721TokenReceiver.onERC721Received.selector, "unsafe recipient");
     }
 
     function safeTransferFrom(address from, address to, uint256 tokenId) public {
@@ -154,31 +154,32 @@ contract NFinTech is IERC721 {
         _operatorApproval[owner][msg.sender],"not owner nor approved");
 
         _transfer(owner, from, to, tokenId);
+        require(to.code.length == 0 || IERC721TokenReceiver(to).onERC721Received(msg.sender, from, tokenId, "") == IERC721TokenReceiver.onERC721Received.selector, "unsafe recipient");
     }
 
-    function _checkOnERC721Received(
-        address from,
-        address to,
-        uint tokenId,
-        bytes memory data
-    ) private returns (bool) {
-        if (_isContract(to)) {
-            return
-                IERC721TokenReceiver(to).onERC721Received(
-                    msg.sender,
-                    from,
-                    tokenId,
-                    data
-                ) == IERC721TokenReceiver.onERC721Received.selector;
-        } else {
-            return true;
-        }
-    }
-    function _isContract(address _addr) private view returns (bool isContract){
-        uint32 _size;
-        assembly {
-            _size := extcodesize(_addr)
-        }
-        return (_size > 0);
-    }
+    // function _checkOnERC721Received(
+    //     address from,
+    //     address to,
+    //     uint tokenId,
+    //     bytes memory data
+    // ) private returns (bool) {
+    //     if (_isContract(to)) {
+    //         return
+    //             IERC721TokenReceiver(to).onERC721Received(
+    //                 msg.sender,
+    //                 from,
+    //                 tokenId,
+    //                 data
+    //             ) == IERC721TokenReceiver.onERC721Received.selector;
+    //     } else {
+    //         return true;
+    //     }
+    // }
+    // function _isContract(address _addr) private view returns (bool isContract){
+    //     uint32 _size;
+    //     assembly {
+    //         _size := extcodesize(_addr)
+    //     }
+    //     return (_size > 0);
+    // }
 }

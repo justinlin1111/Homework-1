@@ -26,11 +26,10 @@ interface IClassroomV2 {
 }
 
 contract StudentV2 {
-    IClassroomV2 classroomv2;
 
-    function register() external view returns (uint256) {
+    function register(address _student) external view returns (uint256) {
         // TODO: please add your implementaiton here
-        if(IClassroomV2(classroomv2).isEnrolled() != true){
+        if(!IClassroomV2(_student).isEnrolled()){
             uint256 code = 1000;
             return code;
         }
