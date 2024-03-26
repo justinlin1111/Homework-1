@@ -26,10 +26,10 @@ interface IClassroomV2 {
 }
 
 contract StudentV2 {
-
-    function register(address _student) external view returns (uint256) {
+    
+    function register() external view returns (uint256) {
         // TODO: please add your implementaiton here
-        if(!IClassroomV2(_student).isEnrolled()){
+        if(!IClassroomV2(msg.sender).isEnrolled()){
             uint256 code = 1000;
             return code;
         }

